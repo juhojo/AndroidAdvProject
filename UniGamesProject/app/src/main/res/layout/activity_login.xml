@@ -9,28 +9,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.juho.unigamesproject.LoginActivity">
 
-    <EditText
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/loginTxt"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:id="@+id/loginButton"
-        android:layout_below="@+id/loginTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fixed_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary_dark"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabTextColor="@color/icons"
+            app:tabBackground="@drawable/tab_color_selector"
+            app:tabSelectedTextColor="@color/icons"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/primary_light"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/signup"
-        android:id="@+id/signupButton"
-        android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp" />
+    </LinearLayout>
 </RelativeLayout>

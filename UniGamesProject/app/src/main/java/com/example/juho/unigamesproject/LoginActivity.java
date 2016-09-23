@@ -1,6 +1,11 @@
 package com.example.juho.unigamesproject;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity implements AsyncResponse {
+public class LoginActivity extends AppCompatActivity implements AsyncResponse, OnLogInSignUpClick {
+    // Instance variables
+    MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+    private LoginFragment loginFragment = new LoginFragment();
+    private SignUpFragment signUpFragment = new SignUpFragment();
     private DBTask asyncTask = new DBTask();
 
     @Override
@@ -16,37 +25,15 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Pager
+        ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setAdapter(adapter);
+        TabLayout tabLayout = (TabLayout)findViewById(R.id.fixed_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
         // Delegate back to this class
         asyncTask.delegate = this;
 
-        final Button login = (Button)findViewById(R.id.loginButton);
-        final Button signUp = (Button)findViewById(R.id.signupButton);
-
-        login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                System.out.println("Button clicked");
-                EditText loginTxt = (EditText)findViewById(R.id.loginTxt);
-                String loginString = loginTxt.getText().toString();
-                /*
-                Intent intent = new Intent(v.getContext(), MainActivity.class);
-                startActivity(intent);
-                */
-
-                asyncTask.execute(loginString.toLowerCase(), "login");
-            }
-        });
-
-        signUp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                System.out.println("Sign up! - Button clicked");
-
-                Intent intent = new Intent(v.getContext(), SignUpActivity.class);
-                startActivity(intent);
-
-            }
-        });
     }
 
     @Override
@@ -64,5 +51,50 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
             // If Login or Sign up fails show message
             Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onLogInClick(String username) {
+        asyncTask.execute(username.toLowerCase(), "login");
+    }
+    @Override
+    public void onSignUpClick(String username, String team) {
+        asyncTask.execute(username.toLowerCase(), team.toLowerCase(), "signUp");
+    }
+
+    // Inner class of Activity
+    class MyPagerAdapter extends FragmentPagerAdapter {
+        final int PAGE_COUNT = 2;
+        private String tabTitles[] = new String[]{"Log in!", "Sign up!"};
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return loginFragment;
+                case 1:
+                    return signUpFragment;
+            }
+            return null;
+        }
+
+        @Override
+        public int getItemPosition(Object item) {
+            return POSITION_NONE;
+        }
+
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
+
     }
 }
