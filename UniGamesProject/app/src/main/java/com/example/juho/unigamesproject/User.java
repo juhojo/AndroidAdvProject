@@ -4,16 +4,13 @@ package com.example.juho.unigamesproject;
  * Created by Juho on 16.9.2016.
  */
 public class User {
-    private int id;
     private String username;
     private String team;
 
-    public User(String un, String tm, int id) {
-        this.id = id;
-        this.username = un;
-        this.team = tm;
+    public User() {
     }
 
+    // Getters
     public String getUsername() {
         return this.username;
     }
@@ -22,6 +19,14 @@ public class User {
         return this.team;
     }
 
-    public int getId() { return this.id; }
+    // Setters
+    public void setUsername(String name) {
+        System.out.println("Got here: " + name);
+        this.username = name;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
 
 }

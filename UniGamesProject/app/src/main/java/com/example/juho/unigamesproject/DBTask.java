@@ -17,6 +17,8 @@ import java.io.StringReader;
 public class DBTask extends AsyncTask<String, String, String> {
     private boolean found = false;
     public AsyncResponse delegate = null;
+    private String un = null;
+    private String team = null;
 
     protected boolean isRegistered(String json, String username) {
 
@@ -47,6 +49,35 @@ public class DBTask extends AsyncTask<String, String, String> {
         return found;
     }
 
+    protected String getTeam(String json, String username) {
+        String team = "No team";
+        try {
+
+            JSONObject jObject = new JSONObject(json);
+            JSONArray jArray = jObject.getJSONArray("accounts");
+
+            for (int i=0; i < jArray.length(); i++)
+            {
+                try {
+                    JSONObject oneObject = jArray.getJSONObject(i);
+                    // Pulling name from the array
+                    String name = oneObject.getString("name");
+                    if (name.equals(username)) {
+                        team = oneObject.getString("team");
+                    }
+                } catch (JSONException e) {
+                    // Oops
+                }
+            }
+
+        } catch (JSONException e) {
+            System.out.println("Not valid json");
+            e.printStackTrace();
+        }
+
+        return team;
+    }
+
     @Override
     protected String doInBackground(String... params) {
         // Last given parameter is always the action
@@ -64,9 +95,8 @@ public class DBTask extends AsyncTask<String, String, String> {
             if (action.equals("login")) {
                 if (found) {
                     message = "Success!";
-
-                    // TODO Initialize User
-                    // Create user
+                    un = params[0];
+                    team = getTeam(usersJson, params[0]);
                 } else {
                     message = "Login failed, user not found!";
                 }
@@ -77,9 +107,8 @@ public class DBTask extends AsyncTask<String, String, String> {
                     String lastId = HttpManager.get("ids");
                     // Post to database
                     message = HttpManager.signUp(params[0], params[1], lastId);
-
-                    // TODO Initialize User
-                    // Create user
+                    un = params[0];
+                    team = params[0];
                 }
             }
         }
@@ -90,7 +119,7 @@ public class DBTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         System.out.println("Done with result: \n" + result);
-        delegate.processFinish(result);
+        delegate.processFinish(result, un, team);
     }
 
     @Override

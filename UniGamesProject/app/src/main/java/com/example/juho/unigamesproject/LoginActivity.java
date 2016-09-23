@@ -50,11 +50,16 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
     }
 
     @Override
-    public void processFinish(String output){
+    public void processFinish(String output, String un, String team){
         // Catch the result from AsyncTask from our response interface
         if (output.equals("Success!")) {
             Intent intent = new Intent(this, MainActivity.class);
+
+            // Forward user's data
+            intent.putExtra("username", un);
+            intent.putExtra("team", team);
             startActivity(intent);
+            finish(); // Prevents users from going back to login page.
         } else {
             // If Login or Sign up fails show message
             Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
