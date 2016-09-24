@@ -6,6 +6,7 @@ package com.example.juho.unigamesproject;
 public class User {
     private String username;
     private String team;
+    private int id;
 
     public User() {
     }
@@ -19,6 +20,10 @@ public class User {
         return this.team;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     // Setters
     public void setUsername(String name) {
         System.out.println("Got here: " + name);
@@ -27,6 +32,10 @@ public class User {
 
     public void setTeam(String team) {
         this.team = team;
+    }
+
+    public void setId(String id) {
+        this.id = Integer.parseInt(id);
     }
 
 }
