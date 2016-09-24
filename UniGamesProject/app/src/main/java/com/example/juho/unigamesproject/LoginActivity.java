@@ -24,12 +24,24 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            // Activity was brought to front and not created,
+            // Thus finishing this will get us to the last viewed activity
+            finish();
+            return;
+        }
         // Pager
         ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout)findViewById(R.id.fixed_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        // Check if activity was started with errors
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            Toast.makeText(getApplicationContext(), extras.getString("error"), Toast.LENGTH_LONG).show();
+        }
 
         // Delegate back to this class
         asyncTask.delegate = this;
@@ -51,6 +63,10 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
             // If Login or Sign up fails show message
             Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
         }
+    }
+    @Override
+    public void udProcessFinish(String output, String id) {
+        // Override interface method
     }
 
     @Override
