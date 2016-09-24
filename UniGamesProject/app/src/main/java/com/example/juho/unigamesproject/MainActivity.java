@@ -1,6 +1,7 @@
 package com.example.juho.unigamesproject;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private UDgetTask asyncTask = new UDgetTask();
+    boolean doubleBackToExitPressedOnce = false;
     TextView textView;
     User user;
 
@@ -39,6 +41,26 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
         // Delegate back to this class
         asyncTask.delegate = this;
+    }
+
+    // Exit application if user taps "Back" twice
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press BACK again to logout", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
