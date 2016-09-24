@@ -15,39 +15,9 @@ import java.io.StringReader;
  */
 
 public class DBTask extends AsyncTask<String, String, String> {
-    private boolean found = false;
     public AsyncResponse delegate = null;
     private String un = null;
     private String team = null;
-
-    protected boolean isRegistered(String json, String username) {
-
-        try {
-
-            JSONObject jObject = new JSONObject(json);
-            JSONArray jArray = jObject.getJSONArray("accounts");
-
-            for (int i=0; i < jArray.length(); i++)
-            {
-                try {
-                    JSONObject oneObject = jArray.getJSONObject(i);
-                    // Pulling name from the array
-                    String name = oneObject.getString("name");
-                    if (name.equals(username)) {
-                        found = true;
-                    }
-                } catch (JSONException e) {
-                    // Oops
-                }
-            }
-
-        } catch (JSONException e) {
-            System.out.println("Not valid json");
-            e.printStackTrace();
-        }
-
-        return found;
-    }
 
     protected String getTeam(String json, String username) {
         String team = "No team";
@@ -90,7 +60,7 @@ public class DBTask extends AsyncTask<String, String, String> {
 
             // Validate if user exists in database
 
-            found = isRegistered(usersJson, params[0]);
+            boolean found = Methods.isRegistered(usersJson, params[0]);
 
             if (action.equals("login")) {
                 if (found) {
