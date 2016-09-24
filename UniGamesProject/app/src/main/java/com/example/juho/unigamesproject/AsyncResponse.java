@@ -5,4 +5,5 @@ package com.example.juho.unigamesproject;
  */
 public interface AsyncResponse {
     void processFinish(String output, String un, String team);
+    void udProcessFinish(String output, String id);
 }
