@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/schedule"
+            android:title="Schedule"
+            android:icon="@drawable/unigames_hamburger"
+            ></item>
+        <item
+            android:id="@+id/ranking"
+            android:title="Ranking"
+            android:icon="@drawable/unigames_hamburger"
+            ></item>
+        <item
+            android:id="@+id/sound"
+            android:title="Sound"
+            android:icon="@drawable/unigames_hamburger"
+            ></item>
+        <item
+            android:id="@+id/tips"
+            android:title="Tips"
+            android:icon="@drawable/unigames_hamburger"
+            ></item>
+    </group>
+</menu>
