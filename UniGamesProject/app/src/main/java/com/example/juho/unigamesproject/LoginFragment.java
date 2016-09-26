@@ -1,6 +1,8 @@
 package com.example.juho.unigamesproject;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +18,9 @@ import android.widget.Toast;
  * Created by Juho on 23.9.2016
  */
 public class LoginFragment extends Fragment {
+
+    // Preferences, we use to load standard username on login
+    SharedPreferences sharedpreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,12 +43,19 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_login, container, false);
         final Button login = (Button)myView.findViewById(R.id.loginButton);
+        final EditText loginTxt = (EditText)myView.findViewById(R.id.loginTxt);
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(Variables.MyPREFERENCES, Context.MODE_PRIVATE);
+        String standardUn = preferences.getString(Variables.Username, null);
+
+        if(standardUn != null) {
+            loginTxt.setText(standardUn);
+        }
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 System.out.println("Button clicked");
-                EditText loginTxt = (EditText)myView.findViewById(R.id.loginTxt);
                 String loginString = loginTxt.getText().toString();
                 _mClickListener.onLogInClick(loginString);
             }

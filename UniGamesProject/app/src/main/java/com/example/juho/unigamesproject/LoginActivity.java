@@ -1,6 +1,8 @@
 package com.example.juho.unigamesproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +21,9 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
     private LoginFragment loginFragment = new LoginFragment();
     private SignUpFragment signUpFragment = new SignUpFragment();
     private DBTask asyncTask = new DBTask();
+
+    // Preferences, we use to save username on login
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +51,24 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
         // Delegate back to this class
         asyncTask.delegate = this;
 
+        // Get default preferences
+        sharedpreferences = getSharedPreferences(Variables.MyPREFERENCES, Context.MODE_PRIVATE);
+
     }
 
     @Override
     public void processFinish(String output, String un, String team){
         // Catch the result from AsyncTask from our response interface
         if (output.equals("Success!")) {
-            Intent intent = new Intent(this, MainActivity.class);
+            // Update as standard username to preferences
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+
+            editor.putString(Variables.Username, un);
+            editor.commit();
 
             // Forward user's data
+            Intent intent = new Intent(this, MainActivity.class);
+
             intent.putExtra("username", un);
             intent.putExtra("team", team);
             startActivity(intent);
