@@ -1,22 +1,39 @@
 package com.example.juho.unigamesproject;
 
+import android.net.Uri;
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse {
+public class MainActivity extends AppCompatActivity implements AsyncResponse, MAFragment.OnFragmentInteractionListener {
     private UDgetTask asyncTask = new UDgetTask();
     boolean doubleBackToExitPressedOnce = false;
     TextView textView;
     User user;
 
+    // Navigation
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Toolbar
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Initialize the user
         user = new User();
@@ -81,5 +98,55 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
             intent.putExtra("error", output);
             startActivity(intent);
         }
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+        // Create a new fragment and specify the planet to show based on position
+        Fragment fragment;
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        switch (position) {
+            default:
+            case 0:
+                fragment = new MAFragment();
+                break;
+            case 1:
+                fragment = new MAFragment();
+                break;
+            case 2:
+                fragment = new MAFragment();
+                break;
+            case 3:
+                fragment = new MAFragment();
+                break;
+        }
+
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        /*
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+        */
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //
     }
 }
