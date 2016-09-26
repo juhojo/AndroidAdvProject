@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
         // Check if activity was started with errors
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        if (extras != null) {
+        if (extras != null && extras.getString("error") != null) {
             Toast.makeText(getApplicationContext(), extras.getString("error"), Toast.LENGTH_LONG).show();
         }
 
