@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse, MAFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements AsyncResponse, OnMAFragmentInteractionListener {
     private UDgetTask asyncTask = new UDgetTask();
     boolean doubleBackToExitPressedOnce = false;
     TextView textView;
@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
     private ListView mDrawerList;
     Boolean mSlideState;
     Toolbar toolbar;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +46,27 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
         // Toolbar -----------------------------------------------
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null); // Remove Title
         Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.unigames_hamburger, null);
+        Drawable toornamentLogo = ResourcesCompat.getDrawable(getResources(), R.drawable.toornament_logo, null);
         Bitmap bitmap = ((BitmapDrawable) icon).getBitmap();
         // Scale it to 50 x 50
         Drawable scaledIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
         // Set your new, scaled drawable "d"
         toolbar.setNavigationIcon(scaledIcon);
+        toolbar.setLogo(toornamentLogo);
+
+        // Set onClick to toornament logo
+        View logoView = toolbar.getChildAt(1);
+        logoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+                Uri uri = Uri.parse(Variables.URL_TOORNAMENT);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +127,23 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
 
         // Delegate back to this class
         asyncTask.delegate = this;
+
+        // Check that the activity has fragment_container
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // If we're being restored from a previous state,
+            // then we don't need to do anything and should return to prevent
+            // overlapping fragments
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            fragment = new ScheduleFragment();
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment).commit();
+        }
     }
 
     private void setMenuItemListeners(Menu menu) {
@@ -174,30 +207,28 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
     private void selectItem(int position) {
         System.out.println("Here!: " + position);
 
-        // Create a new fragment and specify the planet to show based on position
-        Fragment fragment;
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         switch (position) {
             default:
             case 0:
-                fragment = new MAFragment();
+                fragment = new ScheduleFragment();
                 break;
             case 1:
-                fragment = new MAFragment();
+                fragment = new RankingFragment();
                 break;
             case 2:
-                fragment = new MAFragment();
+                fragment = new ScheduleFragment();
                 break;
             case 3:
-                fragment = new MAFragment();
+                fragment = new ScheduleFragment();
                 break;
         }
 
 
         fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(R.id.fragment_container, fragment)
                 .commit();
 
     }
