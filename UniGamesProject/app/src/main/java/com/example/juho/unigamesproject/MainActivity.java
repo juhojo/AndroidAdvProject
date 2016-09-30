@@ -4,24 +4,25 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, MAFragment.OnFragmentInteractionListener {
     private UDgetTask asyncTask = new UDgetTask();
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
 
     // Navigation
     DrawerLayout mDrawerLayout;
+    NavigationView mNavigationView;
+    private ListView mDrawerList;
     Boolean mSlideState;
     Toolbar toolbar;
 
@@ -62,6 +65,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
 
         // Drawer ------------------------------------------------
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView)findViewById(R.id.navigation_view);
+        Menu menu = mNavigationView.getMenu();
+
+        setMenuItemListeners(menu);
+
         mSlideState = false;
         mDrawerLayout.addDrawerListener(new ActionBarDrawerToggle(this,
                 mDrawerLayout,
@@ -105,6 +113,23 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
         asyncTask.delegate = this;
     }
 
+    private void setMenuItemListeners(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            // TODO
+            final int j = i;
+
+            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    selectItem(j);
+                    return true;
+                }
+            });
+        }
+    }
+
     // Exit application if user taps "Back" twice ----------------
     @Override
     public void onBackPressed() {
@@ -145,15 +170,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, MA
         }
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
+        System.out.println("Here!: " + position);
+
         // Create a new fragment and specify the planet to show based on position
         Fragment fragment;
         // Insert the fragment by replacing any existing fragment
