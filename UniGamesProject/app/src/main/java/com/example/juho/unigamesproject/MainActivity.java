@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
         Bitmap bitmap = ((BitmapDrawable) icon).getBitmap();
         // Scale it to 50 x 50
         Drawable scaledIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        // Set your new, scaled drawable "d"
+        // Set scaled drawable as navigation-icon
         toolbar.setNavigationIcon(scaledIcon);
         toolbar.setLogo(toornamentLogo);
 
@@ -216,9 +216,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
             default:
             case 0:
                 fragment = new ScheduleFragment();
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
                 break;
             case 1:
                 fragment = new RankingFragment();
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
                 break;
             case 2:
                 fragment = new ScheduleFragment();
