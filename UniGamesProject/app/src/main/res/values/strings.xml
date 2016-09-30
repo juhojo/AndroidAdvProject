@@ -4,6 +4,8 @@
     <string name="signup">Sign up!</string>
     <string name="username">Username</string>
     <string name="team">Team</string>
+    <string name="schedule">Schedule</string>
+    <string name="ranking">Ranking</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="version">1.0.0</string>
