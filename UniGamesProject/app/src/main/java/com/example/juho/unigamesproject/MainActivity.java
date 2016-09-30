@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
 
         // Set onClick to toornament logo
         View logoView = toolbar.getChildAt(1);
+        Toolbar.LayoutParams lp = new Toolbar.LayoutParams(Gravity.RIGHT);
+        logoView.setLayoutParams(lp);
+
         logoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     private void setMenuItemListeners(Menu menu) {
         for (int i = 0; i < menu.size(); i++) {
             MenuItem item = menu.getItem(i);
-            // TODO
             final int j = i;
 
             item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -245,4 +247,5 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     public void onFragmentInteraction(Uri uri) {
         //
     }
+
 }
