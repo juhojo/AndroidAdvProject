@@ -7,12 +7,12 @@
         <item
             android:id="@+id/schedule"
             android:title="Schedule"
-            android:icon="@drawable/unigames_hamburger"
+            android:icon="@drawable/unigames_calendar"
             ></item>
         <item
             android:id="@+id/ranking"
             android:title="Ranking"
-            android:icon="@drawable/unigames_hamburger"
+            android:icon="@drawable/unigames_list"
             ></item>
         <item
             android:id="@+id/sound"
