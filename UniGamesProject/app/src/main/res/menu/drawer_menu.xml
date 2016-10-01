@@ -14,10 +14,14 @@
             android:title="Ranking"
             android:icon="@drawable/unigames_list"
             ></item>
+    </group>
+    <group
+        android:id="@+id/drawer_menu_group_2"
+        android:checkableBehavior="none">
         <item
             android:id="@+id/sound"
             android:title="Sound"
-            android:icon="@drawable/unigames_hamburger"
+            android:icon="@drawable/unigames_speaker"
             ></item>
         <item
             android:id="@+id/tips"
