@@ -263,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 break;
         }
 
-
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();

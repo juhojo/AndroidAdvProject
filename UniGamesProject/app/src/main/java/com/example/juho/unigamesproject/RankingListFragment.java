@@ -45,8 +45,6 @@ public class RankingListFragment extends Fragment {
             action = getArguments().getString(ARG_PARAM1);
             user = (User)getArguments().getSerializable(ARG_PARAM2);
         }
-
-        System.out.println("RankingListFragment onCreate : user " + user + " , action " + action);
     }
 
     @Override

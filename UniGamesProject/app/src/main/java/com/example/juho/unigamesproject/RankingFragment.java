@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 public class RankingFragment extends Fragment {
     private static final String ARG_PARAM1 = "USER";
     MyPagerAdapter adapter;
+    ViewPager viewPager;
+    TabLayout tabLayout;
 
     private User user;
 
@@ -42,7 +44,7 @@ public class RankingFragment extends Fragment {
             user = (User)getArguments().getSerializable(ARG_PARAM1);
 
             // Set adapter after receiving user data
-            adapter = new MyPagerAdapter(getFragmentManager());
+            adapter = new MyPagerAdapter(getChildFragmentManager());
         }
     }
 
@@ -53,10 +55,10 @@ public class RankingFragment extends Fragment {
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking, container, false);
 
         // Pager
-        final ViewPager viewPager = (ViewPager)myView.findViewById(R.id.viewpager);
+        viewPager = (ViewPager)myView.findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
 
-        TabLayout tabLayout = (TabLayout)myView.findViewById(R.id.fixed_tabs);
+        tabLayout = (TabLayout)myView.findViewById(R.id.fixed_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         return myView;

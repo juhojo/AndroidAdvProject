@@ -55,7 +55,6 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                System.out.println("Button clicked");
                 String loginString = loginTxt.getText().toString();
                 _mClickListener.onLogInClick(loginString);
             }
