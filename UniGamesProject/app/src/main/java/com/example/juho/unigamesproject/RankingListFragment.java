@@ -7,11 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 public class RankingListFragment extends Fragment {
 
     private OnMAFragmentInteractionListener mListener;
+    ListView listView;
+    String[] title = { "Juho", "Jussi", "Johannes" };
 
     private User user;
     private String action;
@@ -46,8 +52,14 @@ public class RankingListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ranking_list, container, false);
+
+        // Inflate the layout for this fragment & save as variable
+        final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking_list, container, false);
+        listView = (ListView)myView.findViewById(R.id.ranking_list_view);
+        CustomAdapter adapter = new CustomAdapter(this.getContext(), title);
+        listView.setAdapter(adapter);
+
+        return myView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -72,6 +84,36 @@ public class RankingListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+}
+
+class CustomAdapter extends ArrayAdapter<String> {
+
+    Context context;
+    String[] title;
+
+    CustomAdapter(Context c, String[] title) {
+
+        super(c, R.layout.ranking_list_item,title);
+        this.context = c;
+        this.title=title;
+
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View row = inflater.inflate(R.layout.ranking_list_item, parent, false);
+        TextView listNumber = (TextView)row.findViewById(R.id.list_number);
+        TextView listUser = (TextView)row.findViewById(R.id.firstLine);
+
+        int pos = position+1;
+        listNumber.setText(Integer.toString(pos));
+        listUser.setText(title[position]);
+        pos++;
+        return row;
     }
 
 }
