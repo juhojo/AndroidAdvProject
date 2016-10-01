@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Handler;
@@ -29,7 +30,6 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements AsyncResponse, OnMAFragmentInteractionListener {
     private UDgetTask asyncTask = new UDgetTask();
     boolean doubleBackToExitPressedOnce = false;
-    TextView textView;
     User user;
     private boolean soundIsOn = true;
 
@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
         // Initialize the user -----------------------------------
         user = new User();
 
-        textView = (TextView)findViewById(R.id.textView);
         String username = null;
         String team = null;
         Intent intent = getIntent();
@@ -130,8 +129,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
             user.setTeam(team);
             asyncTask.execute(username, "getId");
         }
-
-        textView.setText(user.getUsername());
 
         // Delegate back to this class
         asyncTask.delegate = this;
@@ -241,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 break;
             case 1:
-                fragment = new RankingFragment();
+                fragment = RankingFragment.newInstance(user);
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 break;
             case 2:
