@@ -1,5 +1,7 @@
 package com.example.juho.unigamesproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     boolean doubleBackToExitPressedOnce = false;
     TextView textView;
     User user;
+    private boolean soundIsOn = true;
 
     // Navigation
     DrawerLayout mDrawerLayout;
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     Boolean mSlideState;
     Toolbar toolbar;
     private Fragment fragment;
+
+    // Preferences, we use to check & update if used wants sound on / off
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
         logoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
                 Uri uri = Uri.parse(Variables.URL_TOORNAMENT);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
@@ -147,6 +152,24 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, fragment).commit();
         }
+
+        // Get default preferences
+        sharedpreferences = getSharedPreferences(Variables.MyPREFERENCES, Context.MODE_PRIVATE);
+        String soundString = sharedpreferences.getString(Variables.SoundIsOn, null);
+        if (soundString == null || soundString.equals("yes")) {
+            soundIsOn = true;
+        } else {
+            soundIsOn = false;
+        }
+
+        // Use boolean comparisons from now on
+        // Set menu item sound icon
+        MenuItem item = menu.findItem(R.id.sound);
+        if (soundIsOn) {
+            item.setIcon(R.drawable.unigames_speaker);
+        } else {
+            item.setIcon(R.drawable.unigames_speaker_mute);
+        }
     }
 
     private void setMenuItemListeners(Menu menu) {
@@ -158,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
 
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    selectItem(j);
+                    selectItem(j, item);
                     return true;
                 }
             });
@@ -206,8 +229,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     }
 
     /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        System.out.println("Here!: " + position);
+    private void selectItem(int position, MenuItem item) {
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -223,7 +245,21 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 break;
             case 2:
-                fragment = new ScheduleFragment();
+                String soundString;
+                if (soundIsOn) {
+                    item.setIcon(R.drawable.unigames_speaker_mute);
+                    soundString = "no";
+                } else {
+                    item.setIcon(R.drawable.unigames_speaker);
+                    soundString = "yes";
+                }
+                // Update for this session
+                soundIsOn = !soundIsOn;
+
+                // Update as standard soundIsOn to preferences
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(Variables.SoundIsOn, soundString);
+                editor.commit();
                 break;
             case 3:
                 fragment = new ScheduleFragment();
@@ -247,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        //
+        // TODO
     }
 
 }
