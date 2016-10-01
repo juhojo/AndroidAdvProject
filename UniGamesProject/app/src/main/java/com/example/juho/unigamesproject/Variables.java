@@ -12,4 +12,5 @@ public class Variables {
     // Preferences
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Username = "";
+    public static final String SoundIsOn = "yes";
 }
