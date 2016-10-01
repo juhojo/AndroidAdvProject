@@ -1,9 +1,11 @@
 package com.example.juho.unigamesproject;
 
+import java.io.Serializable;
+
 /**
  * Created by Juho on 16.9.2016.
  */
-public class User {
+public class User implements Serializable {
     private String username;
     private String team;
     private int id;
