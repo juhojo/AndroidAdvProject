@@ -253,6 +253,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 // Update for this session
                 soundIsOn = !soundIsOn;
 
+                // If device has gone to sleep while MainActivity is on view
+                // get default preferences again.
+                if (sharedpreferences == null) {
+                    sharedpreferences = getSharedPreferences(Variables.MyPREFERENCES, Context.MODE_PRIVATE);
+                }
                 // Update as standard soundIsOn to preferences
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString(Variables.SoundIsOn, soundString);
