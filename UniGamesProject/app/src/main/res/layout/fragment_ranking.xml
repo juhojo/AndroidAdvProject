@@ -4,18 +4,38 @@
     android:layout_height="match_parent"
     tools:context="com.example.juho.unigamesproject.RankingFragment">
 
-    <TextView
+
+    <RelativeLayout
+        android:id="@+id/ranking_header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/ranking"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="@color/icons"
-        android:background="@color/primary_dark"
-        android:id="@+id/ranking_header"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@color/primary_dark">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/ranking"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/icons"
+            android:background="@color/primary_dark"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/update_button"
+            android:background="@color/primary_dark"
+            android:scaleType="fitXY"
+            android:src="@drawable/unigames_update"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,8 +44,7 @@
         android:id="@+id/ranking_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ranking_header"
-        android:layout_above="@id/update_container">
+        android:layout_below="@id/ranking_header">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/fixed_tabs"
@@ -43,16 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/fixed_tabs"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/update_container"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/primary_dark">
 
     </RelativeLayout>
 
