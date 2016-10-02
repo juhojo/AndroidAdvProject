@@ -3,15 +3,18 @@ package com.example.juho.unigamesproject;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 
@@ -20,6 +23,8 @@ public class RankingFragment extends Fragment {
     MyPagerAdapter adapter;
     ViewPager viewPager;
     TabLayout tabLayout;
+    RankingListFragment fragment;
+    private boolean canBeUpdated = true;
 
     private User user;
 
@@ -53,6 +58,36 @@ public class RankingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment & save as variable
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking, container, false);
+
+        // Update button
+        final ImageButton imageButton = (ImageButton)myView.findViewById(R.id.update_button);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // "Only" allow update once in a second
+                if (canBeUpdated) {
+                    // Update lists
+                    adapter.notifyDataSetChanged();
+
+                    Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.button_rotate);
+                    rotation.setRepeatCount(Animation.INFINITE);
+
+                    // Start animation
+                    imageButton.startAnimation(rotation);
+                    canBeUpdated = false;
+
+                    //Stop animation after 1 second
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageButton.clearAnimation();
+                            canBeUpdated = true;
+                        }
+                    }, 1000);
+                }
+
+            }
+        });
 
         // Pager
         viewPager = (ViewPager)myView.findViewById(R.id.viewpager);
@@ -106,9 +141,9 @@ public class RankingFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return RankingListFragment.newInstance("USER", user);
+                    return fragment.newInstance("USER", user);
                 case 1:
-                    return RankingListFragment.newInstance("TEAM", user);
+                    return fragment.newInstance("TEAM", user);
             }
             return null;
         }
