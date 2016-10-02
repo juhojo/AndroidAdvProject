@@ -61,26 +61,15 @@ public class HttpManager {
         }
 
     }
-    private static String getLastId(String json) {
-        try {
-            JSONObject jObject = new JSONObject(json);
-            JSONArray jArray = jObject.getJSONArray("accounts");
-            return Integer.toString(jArray.length() + 1);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return "0";
-    }
-
-    public static String showScores (String uri) {
+    public static String getScores() {
 
         BufferedReader reader = null;
+        String uri = Variables.URL_GET_SCORES;
 
         try {
             URL url = new URL(uri);
+
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
 
             StringBuilder sb = new StringBuilder();
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -91,7 +80,6 @@ public class HttpManager {
             }
 
             return sb.toString();
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -105,6 +93,18 @@ public class HttpManager {
                 }
             }
         }
+    }
+
+    private static String getLastId(String json) {
+        try {
+            JSONObject jObject = new JSONObject(json);
+            JSONArray jArray = jObject.getJSONArray("accounts");
+            return Integer.toString(jArray.length() + 1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "0";
     }
 
     // POSTS ------------------------------------------------------------ POSTS //
