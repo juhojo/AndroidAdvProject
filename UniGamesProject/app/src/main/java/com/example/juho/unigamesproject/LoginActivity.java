@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 public class LoginActivity extends AppCompatActivity implements AsyncResponse, OnLogInSignUpClick {
     // Instance variables
     MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -80,6 +82,10 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
     }
     @Override
     public void udProcessFinish(String output, String id) {
+        // Override interface method
+    }
+    @Override
+    public void ttProcessFinish(JSONArray jsonArray){
         // Override interface method
     }
 

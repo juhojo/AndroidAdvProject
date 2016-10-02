@@ -26,6 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, OnMAFragmentInteractionListener {
     private UDgetTask asyncTask = new UDgetTask();
@@ -223,6 +225,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
             intent.putExtra("error", output);
             startActivity(intent);
         }
+    }
+    @Override
+    public void ttProcessFinish(JSONArray jsonArray){
+        // Override interface method
     }
 
     /** Swaps fragments in the main content view */
