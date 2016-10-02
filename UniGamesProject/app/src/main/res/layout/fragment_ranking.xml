@@ -16,13 +16,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/ranking_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ranking_header">
+        android:layout_below="@id/ranking_header"
+        android:layout_above="@id/update_container">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/fixed_tabs"
@@ -40,7 +43,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/fixed_tabs"/>
+
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/update_container"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primary_dark">
+
+    </RelativeLayout>
 
 </RelativeLayout>
