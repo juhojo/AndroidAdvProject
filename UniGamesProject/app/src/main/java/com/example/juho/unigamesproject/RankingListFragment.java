@@ -1,6 +1,7 @@
 package com.example.juho.unigamesproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 
-public class RankingListFragment extends Fragment {
+
+public class RankingListFragment extends Fragment implements AsyncResponse {
+
+    private ToornamentTask asyncTask;
 
     private OnMAFragmentInteractionListener mListener;
     ListView listView;
-    String[] title = { "Juho", "Jussi", "Johannes" };
+    String[] titles = { "Juho", "Jussi", "Johannes" };
 
     private User user;
     private String action;
@@ -44,7 +49,19 @@ public class RankingListFragment extends Fragment {
         if (getArguments() != null) {
             action = getArguments().getString(ARG_PARAM1);
             user = (User)getArguments().getSerializable(ARG_PARAM2);
+
+            if (action.equals("USER")) {
+                // TODO
+            } else {
+                // TODO
+            }
+
+            asyncTask = new ToornamentTask();
+            asyncTask.execute("get", action);
         }
+
+        // Delegate back to this class
+        asyncTask.delegate = this;
     }
 
     @Override
@@ -54,10 +71,25 @@ public class RankingListFragment extends Fragment {
         // Inflate the layout for this fragment & save as variable
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking_list, container, false);
         listView = (ListView)myView.findViewById(R.id.ranking_list_view);
-        CustomAdapter adapter = new CustomAdapter(this.getContext(), title);
+        CustomAdapter adapter = new CustomAdapter(this.getContext(), titles);
         listView.setAdapter(adapter);
 
+        System.out.println("onCreateView called!");
+
         return myView;
+    }
+
+    @Override
+    public void processFinish(String output, String un, String team){
+        // Override interface method
+    }
+    @Override
+    public void udProcessFinish(String output, String id) {
+        // Override interface method
+    }
+    @Override
+    public void ttProcessFinish(JSONArray jsonArray){
+        System.out.println("RankingListFragment gets jsonarray: " + jsonArray);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,11 +123,11 @@ class CustomAdapter extends ArrayAdapter<String> {
     Context context;
     String[] title;
 
-    CustomAdapter(Context c, String[] title) {
+    CustomAdapter(Context context, String[] title) {
 
-        super(c, R.layout.ranking_list_item,title);
-        this.context = c;
-        this.title=title;
+        super(context, R.layout.ranking_list_item, title);
+        this.context = context;
+        this.title = title;
 
     }
 
@@ -105,13 +137,17 @@ class CustomAdapter extends ArrayAdapter<String> {
 
         View row = inflater.inflate(R.layout.ranking_list_item, parent, false);
         TextView listNumber = (TextView)row.findViewById(R.id.list_number);
-        TextView listUser = (TextView)row.findViewById(R.id.firstLine);
+        TextView primaryText = (TextView)row.findViewById(R.id.firstLine);
 
         int pos = position+1;
         listNumber.setText(Integer.toString(pos));
-        listUser.setText(title[position]);
+        primaryText.setText(title[position]);
         pos++;
         return row;
+    }
+
+    public void getJson(JSONArray jsonArray) {
+        System.out.println("Got here!");
     }
 
 }
