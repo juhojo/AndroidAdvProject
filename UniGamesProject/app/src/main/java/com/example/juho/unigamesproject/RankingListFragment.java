@@ -14,6 +14,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class RankingListFragment extends Fragment implements AsyncResponse {
@@ -90,6 +96,39 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
     @Override
     public void ttProcessFinish(JSONArray jsonArray){
         System.out.println("RankingListFragment gets jsonarray: " + jsonArray);
+        JSONArray sortedByScores = sortJsonArray(jsonArray);
+
+        System.out.println("jsonarray after sort: " + sortedByScores);
+    }
+
+    public JSONArray sortJsonArray(JSONArray array) {
+        List<JSONObject> jsons = new ArrayList<JSONObject>();
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                jsons.add(array.getJSONObject(i));
+            } catch (Exception e) {
+                // Something went wrong
+            }
+        }
+        Collections.sort(jsons, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject prevObj, JSONObject nextObj) {
+                System.out.println("first obj: " + prevObj + ", second obj: " + nextObj);
+                int prevScore = 0;
+                int nextScore = 0;
+                try {
+                    prevScore = prevObj.getInt("score");
+                    nextScore = nextObj.getInt("score");
+                } catch (Exception e) {
+                    // Something went wrong
+                    System.out.println("wrong b");
+                }
+                // Return larger of the two values
+                return (prevScore > nextScore) ? -1 : 1;
+                // ** If previous number is larger do nothing, else swap
+            }
+        });
+        return new JSONArray(jsons);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -144,10 +183,6 @@ class CustomAdapter extends ArrayAdapter<String> {
         primaryText.setText(title[position]);
         pos++;
         return row;
-    }
-
-    public void getJson(JSONArray jsonArray) {
-        System.out.println("Got here!");
     }
 
 }
