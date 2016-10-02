@@ -28,7 +28,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
 
     private OnMAFragmentInteractionListener mListener;
     ListView listView;
-    String[] titles = { "Juho", "Jussi", "Johannes" };
+    ArrayList<String> titles = new ArrayList<>();
 
     private User user;
     private String action;
@@ -77,8 +77,6 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         // Inflate the layout for this fragment & save as variable
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking_list, container, false);
         listView = (ListView)myView.findViewById(R.id.ranking_list_view);
-        CustomAdapter adapter = new CustomAdapter(this.getContext(), titles);
-        listView.setAdapter(adapter);
 
         System.out.println("onCreateView called!");
 
@@ -99,6 +97,21 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         JSONArray sortedByScores = sortJsonArray(jsonArray);
 
         System.out.println("jsonarray after sort: " + sortedByScores);
+
+        for (int i = 0; i < sortedByScores.length(); i++) {
+            try {
+                JSONObject singleObj = sortedByScores.getJSONObject(i);
+                titles.add(singleObj.getString("name"));
+                // TODO Change titles to HashMap and pass both title and scores
+                // Redo the CustomAdapter from ArrayList to HashMap
+            } catch (Exception e) {
+                // Something went wrong
+            }
+        }
+        // Set the adapter with data
+        CustomAdapter adapter = new CustomAdapter(this.getContext(), titles);
+        listView.setAdapter(adapter);
+
     }
 
     public JSONArray sortJsonArray(JSONArray array) {
@@ -113,7 +126,6 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         Collections.sort(jsons, new Comparator<JSONObject>() {
             @Override
             public int compare(JSONObject prevObj, JSONObject nextObj) {
-                System.out.println("first obj: " + prevObj + ", second obj: " + nextObj);
                 int prevScore = 0;
                 int nextScore = 0;
                 try {
@@ -160,9 +172,9 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
 class CustomAdapter extends ArrayAdapter<String> {
 
     Context context;
-    String[] title;
+    ArrayList<String> title;
 
-    CustomAdapter(Context context, String[] title) {
+    CustomAdapter(Context context, ArrayList<String> title) {
 
         super(context, R.layout.ranking_list_item, title);
         this.context = context;
@@ -180,7 +192,7 @@ class CustomAdapter extends ArrayAdapter<String> {
 
         int pos = position+1;
         listNumber.setText(Integer.toString(pos));
-        primaryText.setText(title[position]);
+        primaryText.setText(title.get(position));
         pos++;
         return row;
     }
