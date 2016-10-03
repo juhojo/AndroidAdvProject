@@ -1,13 +1,17 @@
 package com.example.juho.unigamesproject;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Handler;
@@ -42,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     Boolean mSlideState;
     Toolbar toolbar;
     private Fragment fragment;
+
+    ConnectionReceiver mBroadcastReceiver = new ConnectionReceiver();
+    private AlertDialog alertDialog;
+    boolean mount = true;
 
     // Preferences, we use to check & update if used wants sound on / off
     SharedPreferences sharedpreferences;
@@ -291,6 +299,65 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     @Override
     public void onFragmentInteraction(Uri uri) {
         // TODO
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter iff = new IntentFilter();
+        iff.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        // Put whatever message you want to receive as the action
+        this.registerReceiver(this.mBroadcastReceiver, iff);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.unregisterReceiver(this.mBroadcastReceiver);
+    }
+
+    public class ConnectionReceiver extends BroadcastReceiver {
+
+        public ConnectionReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
+                ConnectivityManager cm =
+                        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null &&
+                        activeNetwork.isConnectedOrConnecting();
+                if (isConnected && !mount) {
+                    MainActivity.this.broadcastAlertHide(intent);
+                } else if (!isConnected){
+                    MainActivity.this.broadcastAlertShow(intent);
+                    mount = false;
+                }
+            }
+        }
+    }
+
+    private void broadcastAlertShow(Intent intent) {
+        if (alertDialog == null || !alertDialog.isShowing()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Oops, disconnected!");
+            builder.setMessage("Please check your internet connection.");
+            builder.setCancelable(false);
+            alertDialog = builder.create();
+            alertDialog.show();
+        }
+    }
+
+    private void broadcastAlertHide(Intent intent) {
+        try {
+            if (alertDialog != null && alertDialog.isShowing())
+                alertDialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
