@@ -10,9 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -78,6 +75,13 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
         } else {
             // If Login or Sign up fails show message
             Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
+
+            // Create new instance of DBTask,
+            // since you can only execute a task once
+            asyncTask = new DBTask();
+
+            // Delegate back to this class
+            asyncTask.delegate = this;
         }
     }
     @Override

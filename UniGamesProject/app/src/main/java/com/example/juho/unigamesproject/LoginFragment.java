@@ -4,23 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 /**
  * Created by Juho on 23.9.2016
  */
 public class LoginFragment extends Fragment {
-
-    // Preferences, we use to load standard username on login
-    SharedPreferences sharedpreferences;
+    private boolean canBeClicked = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +42,7 @@ public class LoginFragment extends Fragment {
         final Button login = (Button)myView.findViewById(R.id.loginButton);
         final EditText loginTxt = (EditText)myView.findViewById(R.id.loginTxt);
 
+        // Preferences, we use to load standard username
         SharedPreferences preferences = getActivity().getSharedPreferences(Variables.MyPREFERENCES, Context.MODE_PRIVATE);
         String standardUn = preferences.getString(Variables.Username, null);
 
@@ -54,9 +52,23 @@ public class LoginFragment extends Fragment {
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
-                String loginString = loginTxt.getText().toString();
-                _mClickListener.onLogInClick(loginString);
+
+                // Prevent user from spamming "Log in"
+                if (canBeClicked) {
+
+                    String loginString = loginTxt.getText().toString();
+                    _mClickListener.onLogInClick(loginString);
+
+                    canBeClicked = false;
+
+                    //Allow user to try log in again after 2 second
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            canBeClicked = true;
+                        }
+                    }, 2000);
+                }
             }
         });
 

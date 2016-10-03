@@ -52,33 +52,35 @@ public class DBTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         // Last given parameter is always the action
         String action = params[params.length - 1];
-        String message = "";
+        String message = "No internet access, try again later.";
 
         if(action.equals("login") || action.equals("signUp")) {
             String usersJson = HttpManager.get("users");
-            System.out.println("JSON:" + usersJson);
 
-            // Validate if user exists in database
+            // Internet access check
+            if (usersJson != null) {
 
-            boolean found = Methods.isRegistered(usersJson, params[0]);
+                // Validate if user exists in database
+                boolean found = Methods.isRegistered(usersJson, params[0]);
 
-            if (action.equals("login")) {
-                if (found) {
-                    message = "Success!";
-                    un = params[0];
-                    team = getTeam(usersJson, params[0]);
-                } else {
-                    message = "Login failed, user not found!";
-                }
-            } else if (action.equals("signUp")) {
-                if (found) {
-                    message = "Sign up failed, user with that username already exists.";
-                } else {
-                    String lastId = HttpManager.get("ids");
-                    // Post to database
-                    message = HttpManager.signUp(params[0], params[1], lastId);
-                    un = params[0];
-                    team = params[0];
+                if (action.equals("login")) {
+                    if (found) {
+                        message = "Success!";
+                        un = params[0];
+                        team = getTeam(usersJson, params[0]);
+                    } else {
+                        message = "Login failed, user not found!";
+                    }
+                } else if (action.equals("signUp")) {
+                    if (found) {
+                        message = "Sign up failed, user with that username already exists.";
+                    } else {
+                        String lastId = HttpManager.get("ids");
+                        // Post to database
+                        message = HttpManager.signUp(params[0], params[1], lastId);
+                        un = params[0];
+                        team = params[0];
+                    }
                 }
             }
         }
