@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -343,8 +344,15 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     private void broadcastAlertShow(Intent intent) {
         if (alertDialog == null || !alertDialog.isShowing()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Oops, disconnected!");
-            builder.setMessage("Please check your internet connection.");
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.alert_dialog_layout, null);
+            builder.setView(dialogView);
+
+            TextView title = (TextView)dialogView.findViewById(R.id.dialog_title);
+            TextView message = (TextView)dialogView.findViewById(R.id.dialog_message);
+
+            title.setText(R.string.dialog_title_internet);
+            message.setText(R.string.dialog_message_internet);
             builder.setCancelable(false);
             alertDialog = builder.create();
             alertDialog.show();
