@@ -3,6 +3,7 @@ package com.example.juho.unigamesproject;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import java.util.List;
 public class RankingListFragment extends Fragment implements AsyncResponse {
 
     private ToornamentTask asyncTask;
+    CustomAdapter adapter;
 
     private OnMAFragmentInteractionListener mListener;
     ListView listView;
@@ -55,19 +57,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         if (getArguments() != null) {
             action = getArguments().getString(ARG_PARAM1);
             user = (User)getArguments().getSerializable(ARG_PARAM2);
-
-            if (action.equals("USER")) {
-                // TODO
-            } else {
-                // TODO
-            }
-
-            asyncTask = new ToornamentTask();
-            asyncTask.execute("get", action);
         }
-
-        // Delegate back to this class
-        asyncTask.delegate = this;
     }
 
     @Override
@@ -78,7 +68,18 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking_list, container, false);
         listView = (ListView)myView.findViewById(R.id.ranking_list_view);
 
-        System.out.println("onCreateView called!");
+        // If updating
+        if (asyncTask != null) {
+            // Clear the adapter
+            adapter.clear();
+        }
+
+        // Create new instance of ToornamentTask
+        asyncTask = new ToornamentTask();
+        asyncTask.execute("get", action); // populate the list
+
+        // Delegate back to this class
+        asyncTask.delegate = this;
 
         return myView;
     }
@@ -94,53 +95,8 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
     @Override
     public void ttProcessFinish(JSONArray jsonArray){
         System.out.println("RankingListFragment gets jsonarray: " + jsonArray);
-        JSONArray sortedByScores = sortJsonArray(jsonArray);
-
-        System.out.println("jsonarray after sort: " + sortedByScores);
-
-        for (int i = 0; i < sortedByScores.length(); i++) {
-            try {
-                JSONObject singleObj = sortedByScores.getJSONObject(i);
-                titles.add(singleObj.getString("name"));
-                // TODO Change titles to HashMap and pass both title and scores
-                // Redo the CustomAdapter from ArrayList to HashMap
-            } catch (Exception e) {
-                // Something went wrong
-            }
-        }
-        // Set the adapter with data
-        CustomAdapter adapter = new CustomAdapter(this.getContext(), titles);
-        listView.setAdapter(adapter);
-
-    }
-
-    public JSONArray sortJsonArray(JSONArray array) {
-        List<JSONObject> jsons = new ArrayList<JSONObject>();
-        for (int i = 0; i < array.length(); i++) {
-            try {
-                jsons.add(array.getJSONObject(i));
-            } catch (Exception e) {
-                // Something went wrong
-            }
-        }
-        Collections.sort(jsons, new Comparator<JSONObject>() {
-            @Override
-            public int compare(JSONObject prevObj, JSONObject nextObj) {
-                int prevScore = 0;
-                int nextScore = 0;
-                try {
-                    prevScore = prevObj.getInt("score");
-                    nextScore = nextObj.getInt("score");
-                } catch (Exception e) {
-                    // Something went wrong
-                    System.out.println("wrong b");
-                }
-                // Return larger of the two values
-                return (prevScore > nextScore) ? -1 : 1;
-                // ** If previous number is larger do nothing, else swap
-            }
-        });
-        return new JSONArray(jsons);
+        JSONSorter jsonSorter = new JSONSorter(this.getContext());
+        jsonSorter.execute(jsonArray);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -166,6 +122,67 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         super.onDetach();
         mListener = null;
     }
+
+    // Inner AsyncTask for JSON formatting
+    class JSONSorter extends AsyncTask<JSONArray, String, JSONArray> {
+        private Context mContext;
+
+        public JSONSorter (Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected JSONArray doInBackground(JSONArray... params) {
+            return sortJsonArray(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray sortedByScores) {
+            for (int i = 0; i < sortedByScores.length(); i++) {
+                try {
+                    JSONObject singleObj = sortedByScores.getJSONObject(i);
+                    titles.add(singleObj.getString("name"));
+                    // TODO Change titles to HashMap and pass both title and scores
+                    // Redo the CustomAdapter from ArrayList to HashMap
+                } catch (Exception e) {
+                    // Something went wrong
+                }
+            }
+            // Set the adapter with data
+            adapter = new CustomAdapter(mContext, titles);
+            listView.setAdapter(adapter);
+        }
+
+        public JSONArray sortJsonArray(JSONArray array) {
+            List<JSONObject> jsons = new ArrayList<JSONObject>();
+            for (int i = 0; i < array.length(); i++) {
+                try {
+                    jsons.add(array.getJSONObject(i));
+                } catch (Exception e) {
+                    // Something went wrong
+                }
+            }
+            Collections.sort(jsons, new Comparator<JSONObject>() {
+                @Override
+                public int compare(JSONObject prevObj, JSONObject nextObj) {
+                    int prevScore = 0;
+                    int nextScore = 0;
+                    try {
+                        prevScore = prevObj.getInt("score");
+                        nextScore = nextObj.getInt("score");
+                    } catch (Exception e) {
+                        // Something went wrong
+                        System.out.println("wrong b");
+                    }
+                    // Return larger of the two values
+                    return (prevScore > nextScore) ? -1 : 1;
+                    // ** If previous number is larger do nothing, else swap
+                }
+            });
+            return new JSONArray(jsons);
+        }
+    }
+
 
 }
 
