@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -59,6 +61,13 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
     public void processFinish(String output, String un, String team){
         // Catch the result from AsyncTask from our response interface
         if (output.equals("Success!")) {
+            // Prevent button from being clicked again
+            View loginView = loginFragment.getView();
+            if (loginView != null) { // Safety check if view exists
+                Button loginBtn = (Button)loginView.findViewById(R.id.loginButton);
+                loginBtn.setEnabled(false); // Disable button
+            }
+
             // Update as standard username to preferences
             SharedPreferences.Editor editor = sharedpreferences.edit();
 
