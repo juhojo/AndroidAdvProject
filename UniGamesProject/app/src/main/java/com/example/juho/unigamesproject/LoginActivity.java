@@ -61,11 +61,17 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse, O
     public void processFinish(String output, String un, String team){
         // Catch the result from AsyncTask from our response interface
         if (output.equals("Success!")) {
-            // Prevent button from being clicked again
+            // Prevent buttons from being clicked again
+            // & wait for Intent to start.
             View loginView = loginFragment.getView();
-            if (loginView != null) { // Safety check if view exists
+            View signUpView = signUpFragment.getView();
+            if (loginView != null && signUpView != null) { // Safety check if views exists
+                // Login
                 Button loginBtn = (Button)loginView.findViewById(R.id.loginButton);
                 loginBtn.setEnabled(false); // Disable button
+                // Sign up
+                Button signUpBtn = (Button)signUpView.findViewById(R.id.signupButton);
+                signUpBtn.setEnabled(false); // Disable button
             }
 
             // Update as standard username to preferences
