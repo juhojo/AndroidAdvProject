@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -47,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     Boolean mSlideState;
     Toolbar toolbar;
     private Fragment fragment;
+
+    // Background Music
+    MediaPlayer player;
+
 
     ConnectionReceiver mBroadcastReceiver = new ConnectionReceiver();
     private AlertDialog alertDialog;
@@ -261,9 +266,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 if (soundIsOn) {
                     item.setIcon(R.drawable.unigames_speaker_mute);
                     soundString = "no";
+                    player.pause();
                 } else {
                     item.setIcon(R.drawable.unigames_speaker);
                     soundString = "yes";
+                    player.start();
+                    System.out.println(player.isPlaying() + "SAAAAAAATAAAAAANAAAAAAAAAAAAAAAAAAAAjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+
                 }
                 // Update for this session
                 soundIsOn = !soundIsOn;
@@ -305,6 +314,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     @Override
     public void onResume() {
         super.onResume();
+        // Sound
+        if(player == null){
+            player = MediaPlayer.create(this, R.raw.music);
+            player.setLooping(true); // Set looping
+            player.setVolume(100,100);
+        }
+        if (soundIsOn){
+            player.start();
+        }
+        // Connectivity change
         IntentFilter iff = new IntentFilter();
         iff.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         // Put whatever message you want to receive as the action
@@ -314,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     @Override
     public void onPause() {
         super.onPause();
+        player.stop();
         this.unregisterReceiver(this.mBroadcastReceiver);
     }
 
