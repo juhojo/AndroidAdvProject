@@ -315,11 +315,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     public void onResume() {
         super.onResume();
         // Sound
-        if(player == null){
-            player = MediaPlayer.create(this, R.raw.music);
-            player.setLooping(true); // Set looping
-            player.setVolume(100,100);
-        }
+        player = MediaPlayer.create(this, R.raw.unigameses);
+        player.setLooping(true); // Set looping
+        player.setVolume(100,100);
         if (soundIsOn){
             player.start();
         }
