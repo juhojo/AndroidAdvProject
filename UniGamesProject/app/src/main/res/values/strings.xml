@@ -9,6 +9,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="dialog_title_internet">Oops, disconnected!</string>
     <string name="dialog_message_internet">Please check your internet connection.</string>
+    <string name="list_score">Score: </string>
 
     <string name="version">1.0.0</string>
     <!-- TODO: Remove or change this placeholder text -->
