@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     private UDgetTask asyncTask = new UDgetTask();
     boolean doubleBackToExitPressedOnce = false;
     User user;
-    private boolean soundIsOn = true;
+    private boolean soundIsOn;
 
     // Navigation
     DrawerLayout mDrawerLayout;
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
 
     // Background Music
     MediaPlayer player;
-
 
     ConnectionReceiver mBroadcastReceiver = new ConnectionReceiver();
     private AlertDialog alertDialog;
@@ -169,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
         // Get default preferences
         sharedpreferences = getSharedPreferences(Variables.MyPREFERENCES, Context.MODE_PRIVATE);
         String soundString = sharedpreferences.getString(Variables.SoundIsOn, null);
+
         if (soundString == null || soundString.equals("yes")) {
             soundIsOn = true;
         } else {
@@ -271,8 +271,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                     item.setIcon(R.drawable.unigames_speaker);
                     soundString = "yes";
                     player.start();
-                    System.out.println(player.isPlaying() + "SAAAAAAATAAAAAANAAAAAAAAAAAAAAAAAAAAjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-
                 }
                 // Update for this session
                 soundIsOn = !soundIsOn;
