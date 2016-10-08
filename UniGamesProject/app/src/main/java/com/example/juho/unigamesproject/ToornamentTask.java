@@ -16,9 +16,23 @@ public class ToornamentTask extends AsyncTask <String, String, JSONArray> {
     protected JSONArray doInBackground(String... params) {
         String action = params[0];
         String type = params[1];
+        JSONArray jsonArray = null;
+        String json;
 
-        String scoreJSON = HttpManager.getScores();
-        JSONArray jsonArray = getScores(scoreJSON, type);
+        if (type.equals("schedule")) {
+            json = HttpManager.getToornament("schedule");
+            try {
+                JSONObject jObject = new JSONObject(json);
+                jsonArray = jObject.getJSONArray("schedule");
+                System.out.println(jsonArray + ", this is schedule array!");
+            } catch (JSONException e) {
+                System.out.println("Not valid json");
+                e.printStackTrace();
+            }
+        } else {
+            json = HttpManager.getToornament("scores");
+            jsonArray = getScores(json, type);
+        }
 
         return jsonArray;
     }
