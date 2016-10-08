@@ -1,7 +1,6 @@
 package com.example.juho.unigamesproject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
 
     private OnMAFragmentInteractionListener mListener;
     ListView listView;
-    ArrayList<String> titles = new ArrayList<>();
+    ArrayList<JSONObject> listItems = new ArrayList<>();
 
     private User user;
     private String action;
@@ -68,7 +68,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         final RelativeLayout myView = (RelativeLayout) inflater.inflate(R.layout.fragment_ranking_list, container, false);
         listView = (ListView)myView.findViewById(R.id.ranking_list_view);
 
-        // If updating
+        // If user wants to update list
         if (asyncTask != null) {
             // Clear the adapter
             adapter.clear();
@@ -141,20 +141,18 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
             for (int i = 0; i < sortedByScores.length(); i++) {
                 try {
                     JSONObject singleObj = sortedByScores.getJSONObject(i);
-                    titles.add(singleObj.getString("name"));
-                    // TODO Change titles to HashMap and pass both title and scores
-                    // Redo the CustomAdapter from ArrayList to HashMap
+                    listItems.add(singleObj);
                 } catch (Exception e) {
                     // Something went wrong
                 }
             }
             // Set the adapter with data
-            adapter = new CustomAdapter(mContext, titles);
+            adapter = new CustomAdapter(mContext, listItems);
             listView.setAdapter(adapter);
         }
 
         public JSONArray sortJsonArray(JSONArray array) {
-            List<JSONObject> jsons = new ArrayList<JSONObject>();
+            List<JSONObject> jsons = new ArrayList<>();
             for (int i = 0; i < array.length(); i++) {
                 try {
                     jsons.add(array.getJSONObject(i));
@@ -186,16 +184,26 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
 
 }
 
-class CustomAdapter extends ArrayAdapter<String> {
+class CustomAdapter extends ArrayAdapter<JSONObject> {
 
     Context context;
-    ArrayList<String> title;
+    ArrayList<String> titles = new ArrayList<>();
+    ArrayList<String> scores = new ArrayList<>();
 
-    CustomAdapter(Context context, ArrayList<String> title) {
-
-        super(context, R.layout.ranking_list_item, title);
+    CustomAdapter(Context context, ArrayList<JSONObject> list) {
+        super(context, R.layout.ranking_list_item, list);
         this.context = context;
-        this.title = title;
+
+        System.out.println(list);
+
+        for ( JSONObject item : list ) {
+            try {
+                titles.add(item.getString("name"));
+                scores.add(item.getString("score"));
+            } catch (JSONException e) {
+                // Something went wrong
+            }
+        }
 
     }
 
@@ -206,10 +214,12 @@ class CustomAdapter extends ArrayAdapter<String> {
         View row = inflater.inflate(R.layout.ranking_list_item, parent, false);
         TextView listNumber = (TextView)row.findViewById(R.id.list_number);
         TextView primaryText = (TextView)row.findViewById(R.id.firstLine);
+        TextView scoreText = (TextView)row.findViewById(R.id.secondLine);
 
         int pos = position+1;
         listNumber.setText(Integer.toString(pos));
-        primaryText.setText(title.get(position));
+        primaryText.setText(titles.get(position));
+        scoreText.setText("Scores: " + scores.get(position));
         pos++;
         return row;
     }
