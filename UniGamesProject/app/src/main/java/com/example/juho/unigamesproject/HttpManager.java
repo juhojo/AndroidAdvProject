@@ -61,10 +61,10 @@ public class HttpManager {
         }
 
     }
-    public static String getScores() {
+    public static String getToornament(String searchType) {
 
         BufferedReader reader = null;
-        String uri = Variables.URL_GET_SCORES;
+        String uri = searchType.equals("scores") ? Variables.URL_GET_SCORES : Variables.URL_GET_SCHEDULE;
 
         try {
             URL url = new URL(uri);
