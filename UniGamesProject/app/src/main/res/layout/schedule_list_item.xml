@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@color/greytrans"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="2016-12-12 00-00-00"
+        android:textSize="12sp"
+        android:background="@color/list_odd"
+        android:textColor="@color/icons"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="9"
+        android:layout_toEndOf="@+id/time">
+
+        <TextView
+            android:id="@+id/team_one"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Team one" />
+
+        <TextView
+            android:id="@+id/teams_divider"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/teams_divider"
+            android:padding="6dp"
+            android:layout_toEndOf="@+id/team_one" />
+
+        <TextView
+            android:id="@+id/team_two"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="Team two"
+            android:padding="6dp"
+            android:layout_toEndOf="@+id/teams_divider" />
+
+    </LinearLayout>
+
+</RelativeLayout>
