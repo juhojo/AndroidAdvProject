@@ -26,7 +26,7 @@ import java.util.List;
 public class RankingListFragment extends Fragment implements AsyncResponse {
 
     private ToornamentTask asyncTask;
-    CustomAdapter adapter;
+    RankingListAdapter adapter;
 
     private OnMAFragmentInteractionListener mListener;
     ListView listView;
@@ -124,7 +124,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
     }
 
     // Inner AsyncTask for JSON formatting
-    class JSONSorter extends AsyncTask<JSONArray, String, JSONArray> {
+    private class JSONSorter extends AsyncTask<JSONArray, String, JSONArray> {
         private Context mContext;
 
         public JSONSorter (Context context) {
@@ -147,7 +147,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
                 }
             }
             // Set the adapter with data
-            adapter = new CustomAdapter(mContext, listItems);
+            adapter = new RankingListAdapter(mContext, listItems);
             listView.setAdapter(adapter);
         }
 
@@ -184,17 +184,15 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
 
 }
 
-class CustomAdapter extends ArrayAdapter<JSONObject> {
+class RankingListAdapter extends ArrayAdapter<JSONObject> {
 
     Context context;
     ArrayList<String> titles = new ArrayList<>();
     ArrayList<String> scores = new ArrayList<>();
 
-    CustomAdapter(Context context, ArrayList<JSONObject> list) {
+    RankingListAdapter(Context context, ArrayList<JSONObject> list) {
         super(context, R.layout.ranking_list_item, list);
         this.context = context;
-
-        System.out.println(list);
 
         for ( JSONObject item : list ) {
             try {
@@ -219,7 +217,7 @@ class CustomAdapter extends ArrayAdapter<JSONObject> {
         int pos = position+1;
         listNumber.setText(Integer.toString(pos));
         primaryText.setText(titles.get(position));
-        scoreText.setText("Scores: " + scores.get(position));
+        scoreText.setText("Points: " + scores.get(position));
         pos++;
         return row;
     }

@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
     private UDgetTask asyncTask = new UDgetTask();
     boolean doubleBackToExitPressedOnce = false;
     User user;
+    String username = null;
     private boolean soundIsOn;
 
     // Navigation
@@ -130,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
         // Initialize the user -----------------------------------
         user = new User();
 
-        String username = null;
         String team = null;
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 return;
             }
 
-            fragment = new ScheduleFragment();
+            fragment = ScheduleFragment.newInstance(username);
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
@@ -253,8 +253,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
 
         switch (position) {
             default:
+                fragment = ScheduleFragment.newInstance(username); // Initial load after Log in
+                break;
             case 0:
-                fragment = new ScheduleFragment();
+                fragment = ScheduleFragment.newInstance(username);
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 break;
             case 1:
@@ -286,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
                 editor.commit();
                 break;
             case 3:
-                fragment = new ScheduleFragment();
+                fragment = ScheduleFragment.newInstance(username);
                 break;
         }
 
