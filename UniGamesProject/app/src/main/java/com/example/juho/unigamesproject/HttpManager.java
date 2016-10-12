@@ -61,6 +61,68 @@ public class HttpManager {
         }
 
     }
+    public static JSONObject getBets(String username) {
+
+        BufferedReader reader = null;
+        String uri = Variables.URL_GET_BETS;
+
+        // Make JSON Object that will be sent to php
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("name", username);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            URL url = new URL(uri);
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+
+            OutputStream os = con.getOutputStream();
+
+            os.write(jsonObject.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+            if(con.getResponseCode() == HttpURLConnection.HTTP_OK){
+                String line;
+                String phpMessage = "";
+                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while ((line=reader.readLine()) != null) {
+                    phpMessage+=line; // Message if sign up was successful
+                }
+
+                System.out.println("PHPMESSAGE: " + phpMessage);
+                try {
+                    JSONObject helperObj = new JSONObject(phpMessage);
+                    JSONObject returnObj = new JSONObject(helperObj.get("0").toString());
+                    return returnObj;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
     public static String getToornament(String searchType) {
 
         BufferedReader reader = null;
