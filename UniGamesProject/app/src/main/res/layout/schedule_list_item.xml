@@ -30,6 +30,7 @@
             android:layout_weight="4"
             android:gravity="center"
             android:textSize="12sp"
+            android:textColor="@color/primary_text"
             android:text="Team one" />
 
         <TextView
@@ -50,6 +51,7 @@
             android:gravity="center"
             android:textSize="12sp"
             android:text="Team two"
+            android:textColor="@color/primary_text"
             android:padding="6dp"
             android:layout_toEndOf="@+id/teams_divider" />
 
