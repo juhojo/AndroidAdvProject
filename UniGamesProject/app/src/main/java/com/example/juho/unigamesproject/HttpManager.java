@@ -215,4 +215,54 @@ public class HttpManager {
         return "Success!";
     }
 
+    public static String setBet(Bet betObject) {
+        String username = betObject.getUsername();
+        String gameId = betObject.getGameId();
+        String team = betObject.getTeam();
+        int bet = betObject.getBet();
+
+        // Make JSON Object that will be sent to php
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("username", username);
+            jsonObject.put("id", gameId);
+            jsonObject.put("team", team);
+            jsonObject.put("bet", bet);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // TODO Continue from here: make addBets.php filu, jossa sitten lisäät bets.jsoniin betin käyttäjälle.
+
+        try {
+            URL url = new URL(Variables.URL_SET_BETS);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+
+            OutputStream os = con.getOutputStream();
+
+            os.write(jsonObject.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+            if(con.getResponseCode() == HttpURLConnection.HTTP_OK){
+                String line;
+                String phpMessage = "";
+                BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while ((line=br.readLine()) != null) {
+                    phpMessage+=line; // Message if sign up was succesful
+                }
+                System.out.println(phpMessage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Bet add failed!";
+        }
+        return "Success!";
+    }
+
 }
