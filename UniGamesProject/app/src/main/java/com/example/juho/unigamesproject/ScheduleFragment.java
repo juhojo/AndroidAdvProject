@@ -73,7 +73,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
         // Create new instance of ToornamentTask
         asyncTask = new ToornamentTask();
 
-        // System.out.println("Username is: " + username);
         asyncTask.execute("get", username, "schedule"); // populate the list
 
         // Delegate back to this class
@@ -143,7 +142,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
 
         @Override
         protected void onPostExecute(JSONArray sortedByDate) {
-            System.out.println("Sorted by date: " + sortedByDate);
             for (int i = 0; i < sortedByDate.length(); i++) {
                 try {
                     JSONObject singleObj = sortedByDate.getJSONObject(i);
@@ -155,8 +153,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
             // Set the adapter with data
             adapter = new ScheduleAdapter(mContext, listItems);
             listView.setAdapter(adapter);
-            System.out.println("Got here yoyoyo!");
-            // TODO ScheduleAdapter
         }
 
         public JSONArray sortJsonArray(JSONArray array) {
@@ -166,7 +162,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
                     jsons.add(array.getJSONObject(i));
                 } catch (Exception e) {
                     // Something went wrong
-                    System.out.println("wrong a");
                     e.printStackTrace();
                 }
             }
@@ -183,7 +178,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
                         nextTime = formatter.parse(nextObj.getString("time"));
                     } catch (Exception e) {
                         // Something went wrong
-                        System.out.println("wrong b");
                         e.printStackTrace();
                     }
                     // Return larger of the two values
@@ -196,65 +190,73 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
         }
     }
 
-}
 
-class ScheduleAdapter extends ArrayAdapter<JSONObject> {
+    class ScheduleAdapter extends ArrayAdapter<JSONObject> {
 
-    Context context;
-    ArrayList<JSONArray> teams = new ArrayList<>();
-    ArrayList<String> time = new ArrayList<>();
-    int bet = -1; // Used to check if user has bet
+        Context context;
+        ArrayList<ScheduleItem> itemsList = new ArrayList<>();
 
-    ScheduleAdapter(Context context, ArrayList<JSONObject> list) {
-        super(context, R.layout.ranking_list_item, list);
-        this.context = context;
+        ScheduleAdapter(Context context, ArrayList<JSONObject> list) {
+            super(context, R.layout.ranking_list_item, list);
+            this.context = context;
 
-        for ( JSONObject item : list ) {
-            try {
-                teams.add(item.getJSONArray("teams"));
-                time.add(item.getString("time"));
-                if (item.has("bet")) { // If is betted
-                    bet = item.getInt("bet");
+            for ( JSONObject item : list ) {
+                ScheduleItem scheduleItem = new ScheduleItem();
+                try {
+                    scheduleItem.newInstance(item.getString("id"), item.getJSONArray("teams"), item.getString("time"));
+                    if (item.has("bet")) { // If is betted
+                        scheduleItem.setBet(item.getInt("bet"));
+                    }
+                    itemsList.add(scheduleItem);
+                } catch (JSONException e) {
+                    // Something went wrong
                 }
+            }
+
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            final View row = inflater.inflate(R.layout.schedule_list_item, parent, false);
+
+            TextView timeTxt = (TextView)row.findViewById(R.id.time);
+            TextView teamOneTxt = (TextView)row.findViewById(R.id.team_one);
+            TextView teamTwoTxt = (TextView)row.findViewById(R.id.team_two);
+
+            final ScheduleItem scheduleItem = itemsList.get(position);
+
+            timeTxt.setText(scheduleItem.getTime());
+            if (position % 2 == 0) { // Style listview items' backgrounds.
+                timeTxt.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.list_even));
+            }
+
+            try {
+                teamOneTxt.setText(scheduleItem.getTeams().get(0).toString());
+                teamTwoTxt.setText(scheduleItem.getTeams().get(1).toString());
+
+                if (scheduleItem.getBet() != -1) {
+                    TextView chosen = teamOneTxt;
+                    if (scheduleItem.getBet() == 1) {
+                        chosen = teamTwoTxt;
+                    }
+                    chosen.setTextColor(ContextCompat.getColor(getContext(), R.color.icons));
+                }
+
+                // Set onClick listeners for TextViews
+                teamOneTxt.setOnClickListener(new ScheduleItemOnClickListener(username, scheduleItem.getId(), teamOneTxt.getText().toString(), 0));
+                teamTwoTxt.setOnClickListener(new ScheduleItemOnClickListener(username, scheduleItem.getId(), teamTwoTxt.getText().toString(), 1));
+                // Set other team as a tag that is used to update UI
+                teamOneTxt.setTag(teamTwoTxt);
+                teamTwoTxt.setTag(teamOneTxt);
             } catch (JSONException e) {
                 // Something went wrong
-                System.out.println("Got to ScheduleAdapter try catch!");
-            }
-        }
-
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View row = inflater.inflate(R.layout.schedule_list_item, parent, false);
-
-        TextView timeTxt = (TextView)row.findViewById(R.id.time);
-        TextView teamOneTxt = (TextView)row.findViewById(R.id.team_one);
-        TextView teamTwoTxt = (TextView)row.findViewById(R.id.team_two);
-
-        timeTxt.setText(time.get(position));
-        if (position % 2 == 0) { // Style listview items backgrounds'.
-            timeTxt.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.list_even));
-        }
-
-        try {
-            teamOneTxt.setText(teams.get(position).get(0).toString());
-            teamTwoTxt.setText(teams.get(position).get(1).toString());
-            if (bet != -1) {
-                TextView chosen = teamOneTxt;
-                if (bet == 1) {
-                    chosen = teamTwoTxt;
-                }
-                chosen.setTextColor(ContextCompat.getColor(getContext(), R.color.icons));
             }
 
-        } catch (JSONException e) {
-            // Something went wrong
+            return row;
         }
-
-        return row;
     }
-
 }
+
+
