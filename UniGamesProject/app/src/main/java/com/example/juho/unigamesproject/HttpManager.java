@@ -233,8 +233,6 @@ public class HttpManager {
             e.printStackTrace();
         }
 
-        // TODO Continue from here: make addBets.php filu, jossa sitten lisäät bets.jsoniin betin käyttäjälle.
-
         try {
             URL url = new URL(Variables.URL_SET_BETS);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -254,9 +252,9 @@ public class HttpManager {
                 String phpMessage = "";
                 BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
                 while ((line=br.readLine()) != null) {
-                    phpMessage+=line; // Message if sign up was succesful
+                    phpMessage+=line;
                 }
-                System.out.println(phpMessage);
+                return phpMessage;
             }
         } catch (Exception e) {
             e.printStackTrace();
