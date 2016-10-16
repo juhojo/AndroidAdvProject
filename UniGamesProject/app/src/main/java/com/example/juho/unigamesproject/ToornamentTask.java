@@ -30,7 +30,9 @@ public class ToornamentTask extends AsyncTask <String, String, JSONArray> {
             try {
                 JSONObject jObject = new JSONObject(json);
                 jsonArray = jObject.getJSONArray("schedule");
-                jsonArray = addBets(jsonArray, bets);
+                if (bets != null) {
+                    jsonArray = addBets(jsonArray, bets);
+                }
             } catch (JSONException e) {
                 System.out.println("Not valid json");
                 e.printStackTrace();
