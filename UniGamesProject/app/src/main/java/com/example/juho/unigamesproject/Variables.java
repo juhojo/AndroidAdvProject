@@ -6,6 +6,7 @@ package com.example.juho.unigamesproject;
 public class Variables {
     // Urls
     final public static String URL_SIGN_UP = "http://users.metropolia.fi/~juhojo/folders/unigames/adduser.php";
+    final public static String URL_SET_BETS = "http://users.metropolia.fi/~juhojo/folders/unigames/setBets.php";
     final public static String URL_USERS_JSON = "http://users.metropolia.fi/~juhojo/folders/unigames/users.json";
     final public static String URL_GET_BETS = "http://users.metropolia.fi/~juhojo/folders/unigames/getBets.php";
     final public static String URL_GET_SCHEDULE = "http://users.metropolia.fi/~juhojo/folders/unigames/getSchedule.php";
