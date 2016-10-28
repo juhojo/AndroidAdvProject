@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
     // Navigation
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
-    private ListView mDrawerList;
     Boolean mSlideState;
     Toolbar toolbar;
     private Fragment fragment;

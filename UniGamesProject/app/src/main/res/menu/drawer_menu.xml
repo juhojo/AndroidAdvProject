@@ -23,10 +23,5 @@
             android:title="Sound"
             android:icon="@drawable/unigames_speaker"
             ></item>
-        <item
-            android:id="@+id/tips"
-            android:title="Tips"
-            android:icon="@drawable/unigames_hamburger"
-            ></item>
     </group>
 </menu>
