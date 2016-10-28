@@ -15,11 +15,20 @@
         android:id="@+id/schedule_header"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/schedule_info"
+        android:text="@string/schedule_info"
+        android:textColor="@color/icons"
+        android:layout_below="@+id/schedule_header"
+        android:background="@drawable/border_bottom_background"
+        android:gravity="center"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/schedule_list"
-        android:layout_below="@+id/schedule_header"
+        android:layout_below="@+id/schedule_info"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
