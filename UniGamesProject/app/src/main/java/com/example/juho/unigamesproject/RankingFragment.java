@@ -1,7 +1,5 @@
 package com.example.juho.unigamesproject;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;

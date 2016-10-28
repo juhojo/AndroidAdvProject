@@ -298,13 +298,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
 
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        /*
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
-        */
-    }
 
     @Override
     public void onResume() {
@@ -345,16 +338,16 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
                 boolean isConnected = activeNetwork != null &&
                         activeNetwork.isConnectedOrConnecting();
                 if (isConnected && !mount) {
-                    MainActivity.this.broadcastAlertHide(intent);
+                    MainActivity.this.broadcastAlertHide();
                 } else if (!isConnected){
-                    MainActivity.this.broadcastAlertShow(intent);
+                    MainActivity.this.broadcastAlertShow();
                     mount = false;
                 }
             }
         }
     }
 
-    private void broadcastAlertShow(Intent intent) {
+    private void broadcastAlertShow() {
         if (alertDialog == null || !alertDialog.isShowing()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             LayoutInflater inflater = this.getLayoutInflater();
@@ -372,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse {
         }
     }
 
-    private void broadcastAlertHide(Intent intent) {
+    private void broadcastAlertHide() {
         try {
             if (alertDialog != null && alertDialog.isShowing())
                 alertDialog.dismiss();
