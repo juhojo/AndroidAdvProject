@@ -141,8 +141,6 @@ public class HttpManager {
                 sb.append(line + "\n");
             }
 
-            System.out.println("from php: " + sb.toString());
-
             return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();

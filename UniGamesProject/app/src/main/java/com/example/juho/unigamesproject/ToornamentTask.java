@@ -26,15 +26,25 @@ public class ToornamentTask extends AsyncTask <String, String, JSONArray> {
             json = HttpManager.getToornament("schedule");
             userName = params[1];
             JSONObject bets = HttpManager.getBets(userName);
-            try {
-                JSONObject jObject = new JSONObject(json);
-                jsonArray = jObject.getJSONArray("schedule");
-                if (bets != null) {
-                    jsonArray = addBets(jsonArray, bets);
+            if (json != null) {
+                try {
+                    JSONObject jObject = new JSONObject(json);
+
+                    // This is a fix to PHP returning an object instead of an array (just PHP things):
+                    if (jObject.get("schedule") instanceof JSONArray) {
+                        jsonArray = jObject.getJSONArray("schedule");
+                    } else {
+                        jsonArray = new JSONArray();
+                        JSONObject scheduleObject = jObject.getJSONObject("schedule").getJSONObject("1");
+                        jsonArray.put(scheduleObject);
+                    }
+                    if (bets != null) {
+                        jsonArray = addBets(jsonArray, bets);
+                    }
+                } catch (JSONException e) {
+                    System.out.println("Not valid json");
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                System.out.println("Not valid json");
-                e.printStackTrace();
             }
         } else {
             json = HttpManager.getToornament("scores");

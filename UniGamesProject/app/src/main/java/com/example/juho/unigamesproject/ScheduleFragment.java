@@ -97,8 +97,10 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
     public void ttProcessFinish(JSONArray jsonArray){
         System.out.println("ScheduleFragment gets jsonarray: " + jsonArray);
 
-        JSONSorter jsonSorter = new JSONSorter(this.getContext());
-        jsonSorter.execute(jsonArray);
+        if (jsonArray != null) {
+            JSONSorter jsonSorter = new JSONSorter(this.getContext());
+            jsonSorter.execute(jsonArray);
+        }
     }
 
     // Inner AsyncTask for JSON formatting
