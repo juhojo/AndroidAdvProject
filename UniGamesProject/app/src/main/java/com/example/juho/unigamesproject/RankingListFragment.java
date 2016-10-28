@@ -28,7 +28,6 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
     private ToornamentTask asyncTask;
     RankingListAdapter adapter;
 
-    private OnMAFragmentInteractionListener mListener;
     ListView listView;
     ArrayList<JSONObject> listItems = new ArrayList<>();
 
@@ -98,31 +97,7 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
         JSONSorter jsonSorter = new JSONSorter(this.getContext());
         jsonSorter.execute(jsonArray);
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnMAFragmentInteractionListener) {
-            mListener = (OnMAFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnMAFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
+    
     // Inner AsyncTask for JSON formatting
     private class JSONSorter extends AsyncTask<JSONArray, String, JSONArray> {
         private Context mContext;

@@ -28,8 +28,6 @@ public class RankingFragment extends Fragment {
 
     private User user;
 
-    private OnMAFragmentInteractionListener mListener;
-
     public RankingFragment() {
         // Required empty public constructor
     }
@@ -97,30 +95,6 @@ public class RankingFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
 
         return myView;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnMAFragmentInteractionListener) {
-            mListener = (OnMAFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnMAFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     // Inner class of Activity

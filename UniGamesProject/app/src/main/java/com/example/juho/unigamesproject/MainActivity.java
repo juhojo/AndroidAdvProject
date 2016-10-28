@@ -35,7 +35,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse, OnMAFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements AsyncResponse {
     private UDgetTask asyncTask = new UDgetTask();
     boolean doubleBackToExitPressedOnce = false;
     User user;
@@ -304,11 +304,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, On
         mTitle = title;
         getActionBar().setTitle(mTitle);
         */
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        // TODO
     }
 
     @Override

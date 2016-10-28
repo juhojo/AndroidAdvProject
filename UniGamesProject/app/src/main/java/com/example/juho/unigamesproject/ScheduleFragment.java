@@ -31,7 +31,6 @@ import java.util.Locale;
 public class ScheduleFragment extends Fragment implements AsyncResponse {
     private static final String ARG_PARAM1 = "USER";
 
-    private OnMAFragmentInteractionListener mListener;
     ListView listView;
     ArrayList<JSONObject> listItems = new ArrayList<>();
 
@@ -86,29 +85,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
         final RelativeLayout myView = (RelativeLayout)inflater.inflate(R.layout.fragment_schedule, container, false);
         listView = (ListView)myView.findViewById(R.id.schedule_list);
         return myView;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnMAFragmentInteractionListener) {
-            mListener = (OnMAFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
