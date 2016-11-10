@@ -45,15 +45,13 @@ public class SignUpFragment extends Fragment {
 
                 // Prevent user from spamming "Sign up"
                 if (canBeClicked) {
-
                     EditText username = (EditText) myView.findViewById(R.id.userNameTxt);
                     EditText team = (EditText) myView.findViewById(R.id.teamNameTxt);
-                    String unString = username.getText().toString();
-                    String teamString = team.getText().toString();
-
+                    String unString = username.getText().toString().replaceAll(" ", "_");
+                    String teamString = team.getText().toString().replaceAll(" ", "_");
+                    
                     if (unString.length() > 0 && teamString.length() > 0) {
                         _mClickListener.onSignUpClick(unString, teamString);
-
                         canBeClicked = false;
 
                         //Allow user to try log in again after 2 second
@@ -65,7 +63,6 @@ public class SignUpFragment extends Fragment {
                         }, 2000);
 
                     } else {
-                        // TODO Show error that you need to give inputs
                         Toast.makeText(myView.getContext(), R.string.provide_all_inputs, Toast.LENGTH_LONG).show();
                     }
                 }
