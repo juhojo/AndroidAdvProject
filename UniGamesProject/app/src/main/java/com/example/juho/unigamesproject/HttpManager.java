@@ -83,7 +83,6 @@ public class HttpManager {
         String uri = Variables.URL_USERS_JSON;
 
         try {
-
             HttpURLConnection con = tryConnect(uri);
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             StringBuilder sb = readLines(reader);
@@ -128,7 +127,6 @@ public class HttpManager {
         try {
             HttpURLConnection con = tryConnect(uri);
             postRequestPHP(con, jsonObject);
-
             if(con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String line;
                 String phpMessage = "";
@@ -158,11 +156,9 @@ public class HttpManager {
         String uri = searchType.equals("scores") ? Variables.URL_GET_SCORES : Variables.URL_GET_SCHEDULE;
 
         try {
-
             HttpURLConnection con = tryConnect(uri);
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
             StringBuilder sb = readLines(reader);
-
             return sb.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,7 +204,6 @@ public class HttpManager {
         try {
             HttpURLConnection con = tryConnect(Variables.URL_SIGN_UP);
             postRequestPHP(con, jsonObject);
-
             return generateMessage(con);
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,19 +231,8 @@ public class HttpManager {
         }
 
         try {
-
             HttpURLConnection con = tryConnect(Variables.URL_SET_BETS);
-
-            con.setRequestMethod("POST");
-            con.setDoInput(true);
-            con.setDoOutput(true);
-
-            OutputStream os = con.getOutputStream();
-
-            os.write(jsonObject.toString().getBytes("UTF-8"));
-            os.flush();
-            os.close();
-
+            postRequestPHP(con, jsonObject);
             message = generateMessage(con);
         } catch (Exception e) {
             e.printStackTrace();
