@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 /**
  * Created by Juho on 23.9.2016
@@ -65,6 +66,7 @@ public class SignUpFragment extends Fragment {
 
                     } else {
                         // TODO Show error that you need to give inputs
+                        Toast.makeText(myView.getContext(), R.string.provide_all_inputs, Toast.LENGTH_LONG).show();
                     }
                 }
             }
