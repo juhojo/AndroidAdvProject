@@ -18,6 +18,64 @@ import java.net.URL;
 
 public class HttpManager {
 
+    private static HttpURLConnection tryConnect(String uri) {
+        try {
+            URL url = new URL(uri);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            return con;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static StringBuilder readLines(BufferedReader reader) {
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (Exception e) {
+            return null;
+        }
+
+        return sb;
+    }
+
+    private static String generateMessage(HttpURLConnection con) {
+        try {
+            if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String line;
+                String phpMessage = "";
+                BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    phpMessage += line; // Message if sign up was successful
+                }
+                return phpMessage;
+            }
+        } catch (Exception e) {
+            // Something went wrong
+        }
+        return null;
+    }
+
+    private static void postRequestPHP(HttpURLConnection con, JSONObject jsonObject) {
+        try {
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setDoOutput(true);
+
+            OutputStream os = con.getOutputStream();
+
+            os.write(jsonObject.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            // Something went wrong
+        }
+    }
+
     // GETS ------------------------------------------------------------ GETS //
     public static String get (String action) {
 
@@ -25,17 +83,10 @@ public class HttpManager {
         String uri = Variables.URL_USERS_JSON;
 
         try {
-            URL url = new URL(uri);
 
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-            StringBuilder sb = new StringBuilder();
+            HttpURLConnection con = tryConnect(uri);
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
+            StringBuilder sb = readLines(reader);
 
             if (action.equals("all") || action.equals("users")) {
                 return sb.toString();
@@ -63,7 +114,6 @@ public class HttpManager {
     }
     public static JSONObject getBets(String username) {
 
-        BufferedReader reader = null;
         String uri = Variables.URL_GET_BETS;
 
         // Make JSON Object that will be sent to php
@@ -76,28 +126,16 @@ public class HttpManager {
         }
 
         try {
-            URL url = new URL(uri);
+            HttpURLConnection con = tryConnect(uri);
+            postRequestPHP(con, jsonObject);
 
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-            con.setRequestMethod("POST");
-            con.setDoInput(true);
-            con.setDoOutput(true);
-
-            OutputStream os = con.getOutputStream();
-
-            os.write(jsonObject.toString().getBytes("UTF-8"));
-            os.flush();
-            os.close();
-
-            if(con.getResponseCode() == HttpURLConnection.HTTP_OK){
+            if(con.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String line;
                 String phpMessage = "";
-                reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while ((line=reader.readLine()) != null) {
-                    phpMessage+=line; // Message if sign up was successful
+                BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    phpMessage += line; // Message if sign up was successful
                 }
-
                 try {
                     JSONObject helperObj = new JSONObject(phpMessage);
                     JSONObject returnObj = new JSONObject(helperObj.get("0").toString());
@@ -105,19 +143,11 @@ public class HttpManager {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                reader.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
         }
         return null;
     }
@@ -128,17 +158,10 @@ public class HttpManager {
         String uri = searchType.equals("scores") ? Variables.URL_GET_SCORES : Variables.URL_GET_SCHEDULE;
 
         try {
-            URL url = new URL(uri);
 
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-            StringBuilder sb = new StringBuilder();
+            HttpURLConnection con = tryConnect(uri);
             reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
+            StringBuilder sb = readLines(reader);
 
             return sb.toString();
         } catch (Exception e) {
@@ -183,32 +206,14 @@ public class HttpManager {
         }
 
         try {
-            URL url = new URL(Variables.URL_SIGN_UP);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            HttpURLConnection con = tryConnect(Variables.URL_SIGN_UP);
+            postRequestPHP(con, jsonObject);
 
-            con.setRequestMethod("POST");
-            con.setDoInput(true);
-            con.setDoOutput(true);
-
-            OutputStream os = con.getOutputStream();
-
-            os.write(jsonObject.toString().getBytes("UTF-8"));
-            os.flush();
-            os.close();
-
-            if(con.getResponseCode() == HttpURLConnection.HTTP_OK){
-                String line;
-                String phpMessage = "";
-                BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while ((line=br.readLine()) != null) {
-                    phpMessage+=line; // Message if sign up was succesful
-                }
-            }
+            return generateMessage(con);
         } catch (Exception e) {
             e.printStackTrace();
             return "Sign up failed!";
         }
-        return "Success!";
     }
 
     public static String setBet(Bet betObject) {
@@ -216,6 +221,7 @@ public class HttpManager {
         String gameId = betObject.getGameId();
         String team = betObject.getTeam();
         int bet = betObject.getBet();
+        String message = "";
 
         // Make JSON Object that will be sent to php
         JSONObject jsonObject = new JSONObject();
@@ -230,8 +236,8 @@ public class HttpManager {
         }
 
         try {
-            URL url = new URL(Variables.URL_SET_BETS);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            HttpURLConnection con = tryConnect(Variables.URL_SET_BETS);
 
             con.setRequestMethod("POST");
             con.setDoInput(true);
@@ -243,20 +249,12 @@ public class HttpManager {
             os.flush();
             os.close();
 
-            if(con.getResponseCode() == HttpURLConnection.HTTP_OK){
-                String line;
-                String phpMessage = "";
-                BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while ((line=br.readLine()) != null) {
-                    phpMessage+=line;
-                }
-                return phpMessage;
-            }
+            message = generateMessage(con);
         } catch (Exception e) {
             e.printStackTrace();
             return "Bet add failed!";
         }
-        return "Success!";
+        return message;
     }
 
 }

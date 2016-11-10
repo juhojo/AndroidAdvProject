@@ -23,7 +23,5 @@ public class BetTask extends AsyncTask<String, String, String> {
         return message;
     }
     @Override
-    protected void onPostExecute(String result) {
-        delegate.betProcessFinish(result);
-    }
+    protected void onPostExecute(String result) { delegate.betProcessFinish(result); }
 }
