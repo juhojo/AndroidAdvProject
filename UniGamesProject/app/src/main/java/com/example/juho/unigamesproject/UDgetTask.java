@@ -48,7 +48,6 @@ public class UDgetTask extends AsyncTask<String, String, String> {
 
         if(action.equals("getId")) {
             String usersJson = HttpManager.get("users");
-            System.out.println(usersJson);
 
             // Validate if user exists in database
             boolean found = Methods.isRegistered(usersJson, params[0]);
@@ -63,7 +62,6 @@ public class UDgetTask extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        System.out.println("Done with result: \n" + result);
         delegate.udProcessFinish(result, id);
     }
 }

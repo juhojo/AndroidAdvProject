@@ -90,13 +90,7 @@ public class DBTask extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        System.out.println("Done with result: \n" + result);
         delegate.processFinish(result, un, team);
-    }
-
-    @Override
-    protected void onPreExecute() {
-        System.out.println("Starting");
     }
 
     @Override

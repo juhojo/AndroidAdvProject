@@ -93,7 +93,6 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
     }
     @Override
     public void ttProcessFinish(JSONArray jsonArray){
-        System.out.println("RankingListFragment gets jsonarray: " + jsonArray);
         JSONSorter jsonSorter = new JSONSorter(this.getContext());
         jsonSorter.execute(jsonArray);
     }
@@ -145,7 +144,6 @@ public class RankingListFragment extends Fragment implements AsyncResponse {
                         nextScore = nextObj.getInt("score");
                     } catch (Exception e) {
                         // Something went wrong
-                        System.out.println("wrong b");
                     }
                     // Return larger of the two values
                     return (prevScore > nextScore) ? -1 : 1;

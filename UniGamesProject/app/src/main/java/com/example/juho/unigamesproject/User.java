@@ -28,7 +28,6 @@ public class User implements Serializable {
 
     // Setters
     public void setUsername(String name) {
-        System.out.println("Got here: " + name);
         this.username = name;
     }
 

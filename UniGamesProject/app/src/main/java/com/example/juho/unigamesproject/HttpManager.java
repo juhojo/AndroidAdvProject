@@ -98,7 +98,6 @@ public class HttpManager {
                     phpMessage+=line; // Message if sign up was successful
                 }
 
-                System.out.println("PHPMESSAGE: " + phpMessage);
                 try {
                     JSONObject helperObj = new JSONObject(phpMessage);
                     JSONObject returnObj = new JSONObject(helperObj.get("0").toString());
@@ -204,7 +203,6 @@ public class HttpManager {
                 while ((line=br.readLine()) != null) {
                     phpMessage+=line; // Message if sign up was succesful
                 }
-                System.out.println(phpMessage);
             }
         } catch (Exception e) {
             e.printStackTrace();

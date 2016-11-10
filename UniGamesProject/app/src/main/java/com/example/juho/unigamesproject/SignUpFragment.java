@@ -66,7 +66,7 @@ public class SignUpFragment extends Fragment {
                         }, 2000);
 
                     } else {
-                        System.out.println("Show error that you need to give inputs");
+                        // TODO Show error that you need to give inputs
                     }
                 }
             }

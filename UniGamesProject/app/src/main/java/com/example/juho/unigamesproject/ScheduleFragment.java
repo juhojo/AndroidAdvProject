@@ -95,8 +95,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
     }
     @Override
     public void ttProcessFinish(JSONArray jsonArray){
-        System.out.println("ScheduleFragment gets jsonarray: " + jsonArray);
-
         if (jsonArray != null) {
             JSONSorter jsonSorter = new JSONSorter(this.getContext());
             jsonSorter.execute(jsonArray);
@@ -146,7 +144,6 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
 
                 @Override
                 public int compare(JSONObject prevObj, JSONObject nextObj) {
-                    System.out.println("prevObj: " + prevObj + ", nextObj: " + nextObj);
                     Date prevTime = new Date();
                     Date nextTime = new Date();
                     try {
@@ -158,7 +155,7 @@ public class ScheduleFragment extends Fragment implements AsyncResponse {
                     }
                     // Return larger of the two values
                     int before = prevTime.compareTo(nextTime);
-                    return (before == 0) ? 1 : -1; // Ascending order
+                    return (before == 0) ? -1 : 1; // Ascending order
                     // ** If previous number is larger do nothing, else swap
                 }
             });
